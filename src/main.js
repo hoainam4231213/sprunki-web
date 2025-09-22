@@ -1,22 +1,33 @@
+import './style.css'
+import './ads.css'
+
 async function loadGames() {
-    const res = await fetch("list-game.json");
-    const games = await res.json();
+    try {
+        const res = await fetch("/list-game.json");
+        const games = await res.json();
 
-    const container = document.getElementById("games_list");
+        const container = document.getElementById("games_list");
+        if (!container) {
+            console.warn("games_list not found");
+            return;
+        }
 
-    games.forEach(game => {
-        const a = document.createElement("a");
-        a.href = game.url;
-        a.title = game.title;
+        games.forEach(game => {
+            const a = document.createElement("a");
+            a.href = game.url;
+            a.title = game.title;
 
-        a.innerHTML = `
-          <div class="game-display">
-            <img src="${game.image}" width="208" height="208" alt="${game.title} img">
-            <div class="ab-title-wrap"><p>${game.title}</p></div>
-          </div>
-        `;
-        container.appendChild(a);
-    });
+            a.innerHTML = `
+              <div class="game-display">
+                <img src="${game.image}" width="208" height="208" alt="${game.title} img">
+                <div class="ab-title-wrap"><p>${game.title}</p></div>
+              </div>
+            `;
+            container.appendChild(a);
+        });
+    } catch (err) {
+        console.error("Failed to load games:", err);
+    }
 }
 
 loadGames();
